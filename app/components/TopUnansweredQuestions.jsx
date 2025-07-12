@@ -13,6 +13,8 @@ import { useNavigate } from "@remix-run/react";
 export const TopUnansweredQuestions = ({ unansweredQuestions }) => {
   const navigate = useNavigate();
 
+  if (unansweredQuestions.length === 0) return null;
+
   return (
     <BlockStack gap="200">
       <Text as="h3" variant="headingMd">

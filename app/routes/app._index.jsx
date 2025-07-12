@@ -1,34 +1,55 @@
 import { Page, Layout, BlockStack } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import Onboarding from "../components/Onboarding";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { TopUnansweredQuestions } from "../components/TopUnansweredQuestions";
-import { questions } from "../mockData/questions";
 import { FaqLogs } from "../components/FaqLogs";
+import prisma from "../db.server";
 
 export const loader = async () => {
+  const conversations = await prisma.conversation.findMany({
+    include: {
+      messages: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const logs = conversations.map((conversation) => {
+    const sortedMessages = [...conversation.messages].sort(
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+    );
+    const userMessage = sortedMessages.find((msg) => msg.role === "User");
+    const assistantMessage = sortedMessages.find(
+      (msg) => msg.role === "Assistant",
+    );
+    const answer = assistantMessage ? assistantMessage.content : null;
+
+    return {
+      id: conversation.id,
+      question: userMessage ? userMessage.content : null,
+      answer: answer,
+      answered: answer !== null,
+      date: conversation.createdAt,
+    };
+  });
+
   return {
     env: {
       THEME_EXTENSION_ID: process.env.THEME_EXTENSION_ID,
       THEME_APP_EXTENSION_NAME: process.env.THEME_APP_EXTENSION_NAME,
     },
-    unansweredQuestions: questions.slice(0, 7),
-    logs: questions.slice(0, 2),
+    unansweredQuestions: logs.filter((log) => !log.answered),
+    logs,
   };
 };
 
 export default function Index() {
   const { env, unansweredQuestions, logs } = useLoaderData();
-  const navigate = useNavigate();
 
   return (
-    <Page
-      primaryAction={{
-        content: "Add FAQ",
-        onAction: () => navigate("/app/faq/new"),
-      }}
-      fullWidth
-    >
+    <Page fullWidth>
       <TitleBar title="Shop chat agent reference app"></TitleBar>
       <BlockStack gap="500">
         <Onboarding
