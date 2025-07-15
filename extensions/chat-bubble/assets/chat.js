@@ -262,6 +262,9 @@
        * @returns {HTMLElement} The created message element
        */
       add: function(text, sender, messagesContainer) {
+        // Remove any tool use messages before adding a new message
+        this.removeToolUseMessages(messagesContainer);
+
         const messageElement = document.createElement('div');
         messageElement.classList.add('shop-ai-message', sender);
 
@@ -276,6 +279,17 @@
         ShopAIChat.UI.scrollToBottom();
 
         return messageElement;
+      },
+
+      /**
+       * Remove all tool use messages from the chat
+       * @param {HTMLElement} messagesContainer - The messages container
+       */
+      removeToolUseMessages: function(messagesContainer) {
+        const toolUseMessages = messagesContainer.querySelectorAll('.shop-ai-message.tool-use');
+        toolUseMessages.forEach(message => {
+          message.remove();
+        });
       },
 
       /**
@@ -442,6 +456,9 @@
           const decoder = new TextDecoder();
           let buffer = '';
 
+          // Remove any existing tool use messages before creating initial message
+          ShopAIChat.Message.removeToolUseMessages(messagesContainer);
+
           // Create initial message element
           let messageElement = document.createElement('div');
           messageElement.classList.add('shop-ai-message', 'assistant');
@@ -497,6 +514,10 @@
 
           case 'chunk':
             ShopAIChat.UI.removeTypingIndicator();
+            // Remove tool use messages when we start receiving content
+            if (currentMessageElement.dataset.rawText === '') {
+              ShopAIChat.Message.removeToolUseMessages(messagesContainer);
+            }
             currentMessageElement.dataset.rawText += data.chunk;
             currentMessageElement.textContent = currentMessageElement.dataset.rawText;
             ShopAIChat.UI.scrollToBottom();
@@ -542,6 +563,9 @@
           case 'new_message':
             ShopAIChat.Formatting.formatMessageContent(currentMessageElement);
             ShopAIChat.UI.showTypingIndicator();
+
+            // Remove tool use messages before creating a new message
+            ShopAIChat.Message.removeToolUseMessages(messagesContainer);
 
             // Create new message element for the next response
             const newMessageElement = document.createElement('div');
