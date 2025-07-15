@@ -284,64 +284,13 @@
        * @param {HTMLElement} messagesContainer - The messages container
        */
       addToolUse: function(toolMessage, messagesContainer) {
-        // Parse the tool message to extract tool name and arguments
-        const match = toolMessage.match(/Thinking.../);
-        if (!match) {
-          // Fallback for unexpected format
-          const toolUseElement = document.createElement('div');
-          toolUseElement.classList.add('shop-ai-message', 'tool-use');
-          toolUseElement.textContent = toolMessage;
-          messagesContainer.appendChild(toolUseElement);
-          ShopAIChat.UI.scrollToBottom();
-          return;
-        }
-
-        // Create the main tool use element
+        // Create the tool use element
         const toolUseElement = document.createElement('div');
         toolUseElement.classList.add('shop-ai-message', 'tool-use');
-
-        // Create the header (always visible)
-        const headerElement = document.createElement('div');
-        headerElement.classList.add('shop-ai-tool-header');
-
-        const toolText = document.createElement('span');
-        toolText.classList.add('shop-ai-tool-text');
-        toolText.textContent = `Thinking...`;
-
-        const toggleElement = document.createElement('span');
-        toggleElement.classList.add('shop-ai-tool-toggle');
-        toggleElement.textContent = '[+]';
-
-        headerElement.appendChild(toolText);
-        headerElement.appendChild(toggleElement);
-
-        // Create the arguments section (initially hidden)
-        const argsElement = document.createElement('div');
-        argsElement.classList.add('shop-ai-tool-args');
-
-        try {
-          // Try to format JSON arguments nicely
-        } catch (e) {
-          // If not valid JSON, just show as-is
-          
-        }
-
-        // Add click handler to toggle arguments visibility
-        headerElement.addEventListener('click', function() {
-          const isExpanded = argsElement.classList.contains('expanded');
-          if (isExpanded) {
-            argsElement.classList.remove('expanded');
-            toggleElement.textContent = '[+]';
-          } else {
-            argsElement.classList.add('expanded');
-            toggleElement.textContent = '[-]';
-          }
-        });
-
-        // Assemble the complete element
-        toolUseElement.appendChild(headerElement);
-        toolUseElement.appendChild(argsElement);
-
+        
+        // Set the HTML content directly to preserve the span element for the dots
+        toolUseElement.innerHTML = 'Thinking<span class="tool-dot"></span><span class="tool-dot"></span><span class="tool-dot"></span>';
+        
         messagesContainer.appendChild(toolUseElement);
         ShopAIChat.UI.scrollToBottom();
       }

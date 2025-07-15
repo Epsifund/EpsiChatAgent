@@ -267,6 +267,41 @@
     font-size: 13px;
     font-weight: 400;
     max-width: 80%;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+  }
+
+  .shop-ai-message.tool-use::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #606060;
+    display: inline-block;
+    animation: typing 1.4s infinite both;
+  }
+
+  .shop-ai-message.tool-use::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #606060;
+    display: inline-block;
+    animation: typing 1.4s infinite both;
+    animation-delay: 0.4s;
+  }
+
+  .shop-ai-message.tool-use .tool-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #606060;
+    display: inline-block;
+    animation: typing 1.4s infinite both;
+    animation-delay: 0.2s;
   }
 
   .shop-ai-tool-header {
