@@ -273,16 +273,6 @@
     padding: 12px 16px;
   }
 
-  .shop-ai-message.tool-use::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #606060;
-    display: inline-block;
-    animation: typing 1.4s infinite both;
-  }
-
   .shop-ai-message.tool-use::after {
     content: '';
     width: 8px;
