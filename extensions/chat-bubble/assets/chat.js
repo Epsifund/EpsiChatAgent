@@ -285,7 +285,7 @@
        */
       addToolUse: function(toolMessage, messagesContainer) {
         // Parse the tool message to extract tool name and arguments
-        const match = toolMessage.match(/Calling tool: (\w+) with arguments: (.+)/);
+        const match = toolMessage.match(/Thinking.../);
         if (!match) {
           // Fallback for unexpected format
           const toolUseElement = document.createElement('div');
@@ -295,9 +295,6 @@
           ShopAIChat.UI.scrollToBottom();
           return;
         }
-
-        const toolName = match[1];
-        const argsString = match[2];
 
         // Create the main tool use element
         const toolUseElement = document.createElement('div');
@@ -309,7 +306,7 @@
 
         const toolText = document.createElement('span');
         toolText.classList.add('shop-ai-tool-text');
-        toolText.textContent = `Calling tool: ${toolName}`;
+        toolText.textContent = `Thinking...`;
 
         const toggleElement = document.createElement('span');
         toggleElement.classList.add('shop-ai-tool-toggle');
@@ -324,11 +321,9 @@
 
         try {
           // Try to format JSON arguments nicely
-          const parsedArgs = JSON.parse(argsString);
-          argsElement.textContent = JSON.stringify(parsedArgs, null, 2);
         } catch (e) {
           // If not valid JSON, just show as-is
-          argsElement.textContent = argsString;
+          
         }
 
         // Add click handler to toggle arguments visibility
