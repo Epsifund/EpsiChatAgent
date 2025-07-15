@@ -303,7 +303,7 @@
         toolUseElement.classList.add('shop-ai-message', 'tool-use');
         
         // Set the HTML content directly to preserve the span element for the dots
-        toolUseElement.innerHTML = 'Thinking<span class="tool-dot"></span><span class="tool-dot"></span><span class="tool-dot"></span>';
+        toolUseElement.innerHTML = '<span class="tool-dot"></span><span class="tool-dot"></span><span class="tool-dot"></span>';
         
         messagesContainer.appendChild(toolUseElement);
         ShopAIChat.UI.scrollToBottom();
